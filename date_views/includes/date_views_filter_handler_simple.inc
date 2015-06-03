@@ -83,7 +83,8 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
     }
     // This a fixed date.
     else {
-      $default_date = $options['value'][$prefix];
+      //Fix the notice if default date is empty
+      $default_date = (empty($options['value'][$prefix])) ? '' : $options['value'][$prefix];
     }
     return $default_date;
   }
@@ -103,7 +104,12 @@ class date_views_filter_handler_simple extends views_handler_filter_date {
       if (empty($this->options['exposed'])) {
         return str_replace(' ', 'T', $this->date_default_value($prefix));
       }
-      elseif (isset($this->options['expose']['identifier']) && !isset($_GET[$this->options['expose']['identifier']])) {
+      elseif ($this->options['is_grouped'] && isset($_REQUEST[$this->options['group_info']['identifier']])) {
+        $identifier = $_REQUEST[$this->options['group_info']['identifier']];
+        $options = $this->options['group_info']['group_items'][$identifier]['value'][$prefix . '_group'];
+        return str_replace(' ', 'T', $this->date_default_value($prefix, $options));
+      }
+      elseif (isset($this->options['expose']['identifier']) && !isset($_REQUEST[$this->options['expose']['identifier']])) {
         return str_replace(' ', 'T', $this->date_default_value($prefix));
       }
     }
