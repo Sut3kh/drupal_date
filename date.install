@@ -308,3 +308,11 @@ function date_update_7200(&$sandbox) {
     drupal_set_message(t('Processed @fields date field entries', array('@fields' => $sandbox['total'])));
   }
 }
+
+/**
+ * Revisited: Date text widgets should always use an increment of 1.
+ */
+function date_update_7005() {
+  // @see https://www.drupal.org/node/1355256
+  date_update_7004();
+}
